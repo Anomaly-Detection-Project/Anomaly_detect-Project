@@ -72,7 +72,7 @@ def q_seven_two(df):
     
     """
     This function creates a new dataframe that produces three columns and a count of
-    least accessed lesson plans by cohort. 
+    least accessed lesson plans by program. 
     """
     
     least_df= df.groupby(['program_id', 'path']).agg('count')
@@ -85,19 +85,6 @@ def q_seven_two(df):
     newer_df.rename(columns= {'ip': 'count'}, inplace= True)
     return newer_df
 
-def q_one():
-    # preparing a subset dataframe of just Data Science
-    data_df = df[df['data']==True].copy()
-   
-    # removing rows in 'path' column having '/'
-    data_df = data_df[data_df['path']!= '/']
-    
-    # groupby() cohort & path combination and counting, sorted by count of 'id'
-    # used a 2nd groupby using .nth method to get only the top count of 'id' for each group of cohorts
-    top_results = data_df.groupby(['cohort_id', 'path'])['id'].count().reset_index().sort_values(['cohort_id', 'id'], ascending=[True, False]).groupby('cohort_id').nth(0)
-    
-    # show results
-    print(top_results)
 
 def q_six(df):
     # preparing a subset dataframe 
