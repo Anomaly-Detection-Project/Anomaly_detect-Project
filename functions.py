@@ -49,6 +49,7 @@ def q_three(df):
     count_df2= weird_df2[['user_id', 'ip']]
     count_df2.sort_values(by= ['user_id', 'ip'], ascending= [False, False])
     new_df2= count_df2.sort_values(by= 'ip', ascending= False).groupby('user_id').nth(0)
+    new_df2 = new_df2.sort_values('ip')
     return new_df2
 
 
