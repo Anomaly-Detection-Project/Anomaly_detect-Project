@@ -111,7 +111,7 @@ def q_six(df):
     inactive_students = df.loc[df["is_active"] == 0]
 
     # extra cleaning to remove path names that aren't "Topics"
-    most_accessed_path_by_program = inactive_students[active_students['path'] != '/']
+    most_accessed_path_by_program = inactive_students[inactive_students['path'] != '/']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'toc']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'search/search_index.json']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'].str.contains('.jpg') == False]
