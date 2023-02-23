@@ -115,7 +115,7 @@ def q_six(df):
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'toc']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'search/search_index.json']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'].str.contains('.jpg') == False]
-
+    most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'index.html']
     # groupby() 'program_id' & 'path' and counting
     # goal is to total accesses to a 'path' and dividing by 'program_id'
     most_accessed_path_by_program = most_accessed_path_by_program.groupby(['program_id', 'path']).agg ('count')
