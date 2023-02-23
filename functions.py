@@ -30,6 +30,7 @@ def q_two(df):
     weird_df.sort_values(by= 'user_id', ascending= False)
     weird_df= weird_df.reset_index()
     weird_df= weird_df[weird_df.path != '/']
+    weird_df= weird_df[weird_df.path != 'toc']
     count_df= weird_df[['cohort_id', 'path', 'ip']]
     count_df.sort_values(by= ['cohort_id', 'ip'], ascending= [False, False])
     new_df= count_df.sort_values(by= 'ip', ascending= False).groupby('cohort_id').nth(0)
@@ -64,6 +65,7 @@ def q_seven(df):
     least_df.sort_values(by= 'user_id', ascending= False)
     least_df= least_df.reset_index()
     least_df= least_df[least_df.path != '/']
+    least_df= least_df[least_df.path != 'toc']
     new_least_df= least_df[['cohort_id', 'path', 'ip']]
     new_least_df.sort_values(by= ['cohort_id', 'ip'], ascending= [False, False])
     newer_df= new_least_df.sort_values(by= 'ip', ascending= False).groupby('cohort_id').nth(-1)
@@ -81,6 +83,7 @@ def q_seven_two(df):
     least_df.sort_values(by= 'user_id', ascending= False)
     least_df= least_df.reset_index()
     least_df= least_df[least_df.path != '/']
+    least_df= least_df[least_df.path != 'toc']
     new_least_df= least_df[['program_id', 'path', 'ip']]
     new_least_df.sort_values(by= ['program_id', 'ip'], ascending= [False, False])
     newer_df= new_least_df.sort_values(by= 'ip', ascending= False).groupby('program_id').nth(-1)
