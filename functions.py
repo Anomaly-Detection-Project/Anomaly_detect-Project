@@ -92,28 +92,30 @@ def q_seven_two(df):
 
 
 def q_six(df):
-    # preparing a subset dataframe 
-    # filtered the logs by users who have already graduated
-    grads_logs_df = df[df['end_date'].notnull()]
+    # subset dataframe of only inactive students
+    # (accces date is after their class 'end_date')
+    inactive_students = df.loc[df["is_active"] == 0]
 
-    # groupby() the logs by the graduating date for each user
-    grad_date_by_user = grads_logs_df.groupby('user_id')['end_date'].max()
+    # extra cleaning to remove path names that aren't "Topics"
+    most_accessed_path_by_program = active_students[active_students['path'] != '/']
+    most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'toc']
+    most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'search/search_index.json']
+    most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'].str.contains('.jpg') == False]
+
+    # groupby() 'program_id' & 'path' and counting
+    # goal is to total accesses to a 'path' and dividing by 'program_id'
+    most_accessed_path_by_program = most_accessed_path_by_program.groupby(['program_id', 'path']).agg ('count')
+
+    # saving groupby() result as dataframe to gain acces to 'path' column again
+    most_accessed_path_by_program = most_accessed_path_by_program.reset_index()
+
+    # subsetting dataframe again with only 3 colums
+    most_accessed_path_by_program = most_accessed_path_by_program[['program_id', 'path', 'ip']]
     
-    # groupby() the filtered logs by path and user_id, and count the number of accesses
-    topics_by_user = grads_logs_df.groupby(['path', 'user_id'])['id'].count()
+    # groupby() 'program_id' which will count the path access from an 'ip'
+    # the nth method will extract only the top result (being the largest count for each group)
+    most_accessed_path_by_program = most_accessed_path_by_program.sort_values(by= 'ip', ascending= False).groupby('program_id').nth(0)
+   
+    # fixed dataframe column name to prepare for printing output
+    most_accessed_path_by_program.rename(columns= {'ip': 'count'}, inplace= True)
 
-    # function to check if a log row is after a user's graduating date
-    def is_after_grad_date(row):
-        user_id = row['user_id']
-        log_date = row.name
-        grad_date = grad_date_by_user[user_id]
-        return log_date > grad_date
-
-    # groupby() the logs by the graduating date for each user and count the number of accesses to each path by each user after their graduating date
-    topics_by_user_after_grad_date = grads_logs_df[grads_logs_df.apply(is_after_grad_date, axis=1)].groupby(['path', 'user_id'])['id'].count()
-
-    # groupby() the filtered logs by path, count the number of unique users who accessed each path after their graduating date, and sort the result
-    topics_by_access = topics_by_user_after_grad_date.groupby('path').nunique().sort_values(ascending=False)
-
-    # ouput
-    print(topics_by_access)
