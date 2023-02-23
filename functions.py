@@ -6,7 +6,7 @@
 
 import pandas as pd
 
-def q_one():
+def q_one(df):
     # preparing a subset dataframe of just Data Science
     data_df = df[df['data']==True].copy()
    
@@ -63,7 +63,7 @@ def q_seven(df):
     least_df.sort_values(by= 'user_id', ascending= False)
     least_df= least_df.reset_index()
     least_df= least_df[least_df.path != '/']
-    new_least_df= weird_df[['cohort_id', 'path', 'ip']]
+    new_least_df= least_df[['cohort_id', 'path', 'ip']]
     new_least_df.sort_values(by= ['cohort_id', 'ip'], ascending= [False, False])
     newer_df= new_least_df.sort_values(by= 'ip', ascending= False).groupby('cohort_id').nth(-1)
     newer_df.rename(columns= {'ip': 'count'}, inplace= True)
