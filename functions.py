@@ -6,7 +6,19 @@
 
 import pandas as pd
 
-
+def q_one():
+    # preparing a subset dataframe of just Data Science
+    data_df = df[df['data']==True].copy()
+   
+    # removing rows in 'path' column having '/'
+    data_df = data_df[data_df['path']!= '/']
+    
+    # groupby() cohort & path combination and counting, sorted by count of 'id'
+    # used a 2nd groupby using .nth method to get only the top count of 'id' for each group of cohorts
+    top_results = data_df.groupby(['cohort_id', 'path'])['id'].count().reset_index().sort_values(['cohort_id', 'id'], ascending=       [True, False]).groupby('cohort_id').nth(0)
+    
+    # show results
+    print(top_results)
 
 def q_two(df):
     '''
@@ -73,7 +85,7 @@ def q_seven_two(df):
     newer_df.rename(columns= {'ip': 'count'}, inplace= True)
     return newer_df
 
-def question_01():
+def q_one():
     # preparing a subset dataframe of just Data Science
     data_df = df[df['data']==True].copy()
    
@@ -87,7 +99,7 @@ def question_01():
     # show results
     print(top_results)
 
-def question_06():
+def q_six(df):
     # preparing a subset dataframe 
     # filtered the logs by users who have already graduated
     grads_logs_df = df[df['end_date'].notnull()]
