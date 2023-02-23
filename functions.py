@@ -132,7 +132,9 @@ def q_six(df):
    
     # fixed dataframe column name to prepare for printing output
     most_accessed_path_by_program.rename(columns= {'ip': 'count'}, inplace= True)
-    
+   
+    return most_accessed_path_by_program
+
 def fourth_cohort(df):
     four= df[df.cohort_id== 4]
     return four
