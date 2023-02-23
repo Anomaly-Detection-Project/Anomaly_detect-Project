@@ -7,18 +7,23 @@
 import pandas as pd
 
 def q_one(df):
-    # preparing a subset dataframe of just Data Science
-    data_df = df[df['data']==True].copy()
-   
-    # removing rows in 'path' column having '/'
-    data_df = data_df[data_df['path']!= '/']
+
+    # cleaning for n/a 'path' values
+    most_accessed_path_by_program = df[df['path'] != '/']
+    most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'index.html']
+    most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'toc']
+    most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'search/search_index.json']
+    most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'].str.contains('.jpg') == False]
     
-    # groupby() cohort & path combination and counting, sorted by count of 'id'
-    # used a 2nd groupby using .nth method to get only the top count of 'id' for each group of cohorts
-    top_results = data_df.groupby(['cohort_id', 'path'])['id'].count().reset_index().sort_values(['cohort_id', 'id'], ascending=       [True, False]).groupby('cohort_id').nth(0)
+    most_accessed_path_by_program = most_accessed_path_by_program.groupby(['program_id', 'path']).agg('count')
     
-    # show results
-    print(top_results)
+    most_accessed_path_by_program = most_accessed_path_by_program.reset_index()
+
+    most_accessed_path_by_program = most_accessed_path_by_program[['program_id', 'path', 'ip']]
+    most_accessed_path_by_program = most_accessed_path_by_program.sort_values(by= 'ip', ascending= False).groupby('program_id').nth(0)
+    most_accessed_path_by_program.rename(columns= {'ip': 'count'}, inplace= True)
+
+    print(most_accessed_path_by_program)
 
 def q_two(df):
     '''
@@ -97,7 +102,7 @@ def q_six(df):
     inactive_students = df.loc[df["is_active"] == 0]
 
     # extra cleaning to remove path names that aren't "Topics"
-    most_accessed_path_by_program = active_students[active_students['path'] != '/']
+    most_accessed_path_by_program = inactive_students[active_students['path'] != '/']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'toc']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'search/search_index.json']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'].str.contains('.jpg') == False]
