@@ -27,7 +27,7 @@ def prep_curr_logs(df):
     df['data']= df['program_id']== 3
     df['web']= df['program_id']== 2
     df['php']= df['program_id']== 1
-    df['front_end']= df['program_id']= 4
+    df['front_end']= df['program_id']== 4
     
     # adding a column is_active that shows if the log in was attempted when the user was active in the program
     active = ([df['end_date'] >= df['fixed_date']])
