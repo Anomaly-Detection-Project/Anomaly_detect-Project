@@ -61,4 +61,35 @@ def manny_wrangle():
     df = manny_clean(df) 
     return df
 
+def question_01():
+    data_df = df[df['data']==True].copy()
+    data_df = data_df[data_df['path']!= '/']
+    top_results = data_df.groupby(['cohort_id', 'path'])['id'].count().reset_index().sort_values(['cohort_id', 'id'], ascending=[True, False]).groupby('cohort_id').nth(0)
+    print(top_results)
 
+def question_06():
+    # preparing a subset dataframe 
+    # filtered the logs by users who have already graduated
+    grads_logs_df = df[df['end_date'].notnull()]
+
+    # groupby() the logs by the graduating date for each user
+    grad_date_by_user = grads_logs_df.groupby('user_id')['end_date'].max()
+    
+    # groupby() the filtered logs by path and user_id, and count the number of accesses
+    topics_by_user = grads_logs_df.groupby(['path', 'user_id'])['id'].count()
+
+    # function to check if a log row is after a user's graduating date
+    def is_after_grad_date(row):
+        user_id = row['user_id']
+        log_date = row.name
+        grad_date = grad_date_by_user[user_id]
+        return log_date > grad_date
+
+    # groupby() the logs by the graduating date for each user and count the number of accesses to each path by each user after their graduating date
+    topics_by_user_after_grad_date = grads_logs_df[grads_logs_df.apply(is_after_grad_date, axis=1)].groupby(['path', 'user_id'])['id'].count()
+
+    # groupby() the filtered logs by path, count the number of unique users who accessed each path after their graduating date, and sort the result
+    topics_by_access = topics_by_user_after_grad_date.groupby('path').nunique().sort_values(ascending=False)
+
+    # ouput
+    print(topics_by_access)
