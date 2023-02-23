@@ -33,6 +33,7 @@ def q_two(df):
     count_df= weird_df[['cohort_id', 'path', 'ip']]
     count_df.sort_values(by= ['cohort_id', 'ip'], ascending= [False, False])
     new_df= count_df.sort_values(by= 'ip', ascending= False).groupby('cohort_id').nth(0)
+    new_df.rename(columns= {'ip': 'count'}, inplace= True)
     return new_df
 
 def q_three(df):
