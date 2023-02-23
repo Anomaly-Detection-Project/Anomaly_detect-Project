@@ -44,7 +44,7 @@ def q_three(df):
     '''
     
     df1 = df.loc[df["is_active"] ==1 ]
-    weird_df2= df.groupby(['user_id']).agg('count')
+    weird_df2= df1.groupby(['user_id']).agg('count')
     weird_df2.sort_values(by= 'cohort_id', ascending= False)
     weird_df2= weird_df2.reset_index()
     weird_df2= weird_df2[weird_df2.ip < 50]
