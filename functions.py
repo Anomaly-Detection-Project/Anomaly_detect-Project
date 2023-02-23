@@ -4,7 +4,11 @@
 # In[ ]:
 
 
-def Q_two(df):
+import pandas as pd
+
+
+
+def q_two(df):
     '''
     This function creates a new df that produces three columns and a count of 
     most accessed lesson plans by cohort.
@@ -19,7 +23,7 @@ def Q_two(df):
     new_df= count_df.sort_values(by= 'ip', ascending= False).groupby('cohort_id').nth(0)
     return new_df
 
-def Q_three(df):
+def q_three(df):
     '''
     This function creates a new df that produces two columns with only active user
     log in attempts and a count of least active users.
@@ -38,7 +42,7 @@ def Q_three(df):
 
 def q_seven(df):
     '''
-    This function creates a new df that produces three columns and a count of
+    This function creates a new dataframe that produces three columns and a count of
     least accessed lesson plans by cohort.
     '''
     
@@ -49,5 +53,23 @@ def q_seven(df):
     new_least_df= weird_df[['cohort_id', 'path', 'ip']]
     new_least_df.sort_values(by= ['cohort_id', 'ip'], ascending= [False, False])
     newer_df= new_least_df.sort_values(by= 'ip', ascending= False).groupby('cohort_id').nth(-1)
+    newer_df.rename(columns= {'ip': 'count'}, inplace= True)
+    return newer_df
+
+def q_seven_two(df):
+    
+    """
+    This function creates a new dataframe that produces three columns and a count of
+    least accessed lesson plans by cohort. 
+    """
+    
+    least_df= df.groupby(['program_id', 'path']).agg('count')
+    least_df.sort_values(by= 'user_id', ascending= False)
+    least_df= least_df.reset_index()
+    least_df= least_df[least_df.path != '/']
+    new_least_df= least_df[['program_id', 'path', 'ip']]
+    new_least_df.sort_values(by= ['program_id', 'ip'], ascending= [False, False])
+    newer_df= new_least_df.sort_values(by= 'ip', ascending= False).groupby('program_id').nth(-1)
+    newer_df.rename(columns= {'ip': 'count'}, inplace= True)
     return newer_df
 
