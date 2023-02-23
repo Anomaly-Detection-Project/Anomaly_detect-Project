@@ -15,12 +15,21 @@ def q_one(df):
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'] != 'search/search_index.json']
     most_accessed_path_by_program = most_accessed_path_by_program[most_accessed_path_by_program['path'].str.contains('.jpg') == False]
     
+    # groupby() 'program_id' & 'path' and counting
+    # goal is to total accesses to a 'path' and dividing by 'program_id'
     most_accessed_path_by_program = most_accessed_path_by_program.groupby(['program_id', 'path']).agg('count')
     
+    # saving groupby() result as dataframe to gain acces to 'path' column again
     most_accessed_path_by_program = most_accessed_path_by_program.reset_index()
-
+    
+    # subsetting dataframe again with only 3 colums
     most_accessed_path_by_program = most_accessed_path_by_program[['program_id', 'path', 'ip']]
+    
+    # groupby() 'program_id' which will count the path access from an 'ip'
+    # the nth method will extract only the top result (being the largest count for each group)
     most_accessed_path_by_program = most_accessed_path_by_program.sort_values(by= 'ip', ascending= False).groupby('program_id').nth(0)
+    
+    # fixed dataframe column name to prepare for printing output
     most_accessed_path_by_program.rename(columns= {'ip': 'count'}, inplace= True)
 
     print(most_accessed_path_by_program)
